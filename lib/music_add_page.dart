@@ -37,7 +37,7 @@ class _MusicAddPageState extends State<MusicAddPage> {
         child: SingleChildScrollView( //スクロールできるようにする
           child:Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              //crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 //曲名
                 const Text('曲名', style: TextStyle(fontSize: 15)),
