@@ -11,8 +11,12 @@ class Siggmo extends StatelessWidget {
       // アプリ名
       title: 'My Todo App',
       theme: ThemeData(
-        // テーマカラー
+        // ダークモード
+        brightness:Brightness.dark,
         primarySwatch: Colors.blue,
+        primaryColor: const Color(0xFF212121),
+        accentColor: const Color(0xFF64ffda),
+        canvasColor: const Color(0xFF303030),
       ),
       // リスト一覧画面を表示
       home: MainPage(),
