@@ -31,8 +31,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  // Todoリストのデータ
-  List<String> todoList = [];
+  // 曲一覧を取得
+  List<String> musicList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,11 @@ class _MainPageState extends State<MainPage> {
         title: Text('登録曲一覧'),
       ),
       body: ListView.builder(
-        itemCount: todoList.length,
+        itemCount: musicList.length,
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
-              title: Text(todoList[index]),
+              title: Text(musicList[index]),
               onTap:(){
                 print("onTap called");
               },
@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> {
             // キャンセルした場合は返り値がnullとなるので注意
             setState(() {
               // リスト追加
-              todoList.add(newListText);
+              musicList.add(newListText);
             });
           }
         },

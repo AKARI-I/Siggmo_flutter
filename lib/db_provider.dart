@@ -82,6 +82,44 @@ class SiggmoDaoHelper{
     _db = await _factory.create();
   }
 
+  //全件取得
+  Future<Siggmo?> queryAllRows() async {
+    List<Map> maps = await _db.query(_tableName,
+        columns: [
+          _columnMusicId,
+          _columnMusicName,
+          _columnMusicNameKana,
+          _columnArtistName,
+          _columnArtistNameKana,
+          _columnAverage,
+          _columnMax,
+          _columnMin,
+          _columnLatest,
+          _columnLastTime,
+          _columnTwoTimesBefore,
+          _columnCreateDate,
+          _columnUpdateDate,
+        ]);
+    if(maps.isNotEmpty){
+      return Siggmo(
+        maps.first[_columnMusicId],
+        maps.first[_columnMusicName],
+        maps.first[_columnMusicNameKana],
+        maps.first[_columnArtistName],
+        maps.first[_columnArtistNameKana],
+        maps.first[_columnAverage],
+        maps.first[_columnMax],
+        maps.first[_columnMin],
+        maps.first[_columnLatest],
+        maps.first[_columnLastTime],
+        maps.first[_columnTwoTimesBefore],
+        maps.first[_columnCreateDate],
+        maps.first[_columnUpdateDate],
+      );
+    }
+    return null;
+  }
+
   //5.取得操作、必ずListで返却される
   Future<Siggmo?> fetch(int musicId) async {
     List<Map> maps = await _db.query(_tableName,
@@ -195,6 +233,20 @@ class SiggmoDao {
       print(e.message);
     } finally {
       //10.必ず最後にcloseする
+      await helper.close();
+    }
+  }
+
+  //全件取得
+  Future<Siggmo?> allFetch() async {
+    var helper = SiggmoDaoHelper(factory);
+    try {
+      await helper.open();
+      return await helper.queryAllRows();
+    } on SqfliteDatabaseException catch (e) {
+      print(e.message);
+      return null;
+    } finally {
       await helper.close();
     }
   }

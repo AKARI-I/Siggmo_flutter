@@ -111,6 +111,16 @@ class _MusicAddPageState extends State<MusicAddPage> {
                     ),
                   ),
                 ),
+                Container(
+                  child: SizedBox(
+                    child: TextButton(
+                      onPressed: () {
+                        query();
+                      },
+                      child: Text('allfetch'),
+                    ),
+                  ),
+                ),
               ],
             )
         )
@@ -128,6 +138,7 @@ class _MusicAddPageState extends State<MusicAddPage> {
   }
   void query(){
     print("--- query ---");
+    print(helper.allFetch());
   }
   void update(){
     print("--- update処理 ---");
