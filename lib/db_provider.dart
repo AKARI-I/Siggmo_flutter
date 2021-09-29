@@ -25,39 +25,40 @@ class Siggmo{
 //1.DDL操作の責務を持たせたクラス
 class DatabaseFactory {
   Future<Database> create() async {
-    print("=== create method now ===");
     var databasesPath = await getDatabasesPath();
     //2.joinメソッドはpathパッケージのもの
     final path = join(databasesPath, 'siggmo.db');
-    //3.データベースが作成されていない場合にonCreate関数が呼ばれる
-    return await openDatabase(path, version: 1, onCreate: (
+    print("path=${path}");
+    //3.データベースが作成されていない場合にonCreate関数が呼ばれる(はず…)
+    return await openDatabase(path,
+      version: 1,
+      onCreate: (
         Database db,
         int version,
     ) async {
       await db.execute('''
-      create table ${SiggmoDaoHelper._tableName} (
-      ${SiggmoDaoHelper._columnMusicId} int primary key auto increment,
-      ${SiggmoDaoHelper._columnMusicName} text,
-      ${SiggmoDaoHelper._columnMusicNameKana} text,
-      ${SiggmoDaoHelper._columnArtistName} text,
-      ${SiggmoDaoHelper._columnArtistNameKana} text,
-      ${SiggmoDaoHelper._columnAverage} real,
-      ${SiggmoDaoHelper._columnMax} real,
-      ${SiggmoDaoHelper._columnMin} real,
-      ${SiggmoDaoHelper._columnLatest} real,
-      ${SiggmoDaoHelper._columnLastTime} real,
-      ${SiggmoDaoHelper._columnTwoTimesBefore} real,
-      ${SiggmoDaoHelper._columnCreateDate} text,
-      ${SiggmoDaoHelper._columnUpdateDate} text
-      )
-      ''');
-    });
+      CREATE TABLE ${SiggmoDaoHelper._tableName} (
+      ${SiggmoDaoHelper._columnMusicId} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${SiggmoDaoHelper._columnMusicName} TEXT,
+      ${SiggmoDaoHelper._columnMusicNameKana} TEXT,
+      ${SiggmoDaoHelper._columnArtistName} TEXT,
+      ${SiggmoDaoHelper._columnArtistNameKana} TEXT,
+      ${SiggmoDaoHelper._columnAverage} REAL,
+      ${SiggmoDaoHelper._columnMax} REAL,
+      ${SiggmoDaoHelper._columnMin} REAL,
+      ${SiggmoDaoHelper._columnLatest} REAL,
+      ${SiggmoDaoHelper._columnLastTime} REAL,
+      ${SiggmoDaoHelper._columnTwoTimesBefore} REAL,
+      ${SiggmoDaoHelper._columnCreateDate} TEXT,
+      ${SiggmoDaoHelper._columnUpdateDate} TEXT
+      )''');
+    },);
   }
 }
 
 //4.データの取得・追加・更新・削除の責務を持たせたクラス
 class SiggmoDaoHelper{
-  static const _tableName = 'Siggmo';
+  static const _tableName = 'siggmo';
   static const _columnMusicId = 'musicId';
   static const _columnMusicName = 'musicName';
   static const _columnMusicNameKana = 'musicNameKana';
@@ -78,7 +79,6 @@ class SiggmoDaoHelper{
   SiggmoDaoHelper(this._factory);
 
   Future<void> open() async {
-    print("=== open method now ===");
     _db = await _factory.create();
   }
 
@@ -123,13 +123,10 @@ class SiggmoDaoHelper{
   }
 
   //6.挿入処理
-  Future<void> insert(String musicName, String musicNameKana, String artistName, String artistNameKana, double average, double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
-    print("=== insert method now ===");
-    print(musicName + "," + musicNameKana + "," + artistName + "," + artistNameKana + ",${average},${max},${min},${latest},${lastTime},${twoTimesBefore}," + createDate + "," + updateDate);
-    print("=========================");
-    print("=== 全件取得 ===");
-    print (queryAllRows());
-    print("===============");
+  Future<void> insert(String musicName, String musicNameKana, String artistName, String artistNameKana, double average,
+      double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
+    // ignore: avoid_print
+    print(musicName + "," + musicNameKana + "," + artistName + "," + artistNameKana + ",$average,$max,$min,$latest,$lastTime,$twoTimesBefore," + createDate + "," + updateDate);
 
     await _db.insert(_tableName,{
       _columnMusicName: musicName,
@@ -177,12 +174,6 @@ class SiggmoDaoHelper{
       where: '$_columnMusicId = ?',
       whereArgs: [musicId]
     );
-  }
-
-  //全件取得
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
-    print("--- start 全件取得 ---");
-    return await _db.query('siggmo.db'); //全件取得
   }
 
   Future<void> close() async => _db.close();
