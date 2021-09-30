@@ -83,7 +83,7 @@ class SiggmoDaoHelper{
   }
 
   //全件取得
-  Future<Siggmo?> queryAllRows() async {
+  Future<List?> queryAllRows() async {
     List<Map> maps = await _db.query(_tableName,
         columns: [
           _columnMusicId,
@@ -101,21 +101,22 @@ class SiggmoDaoHelper{
           _columnUpdateDate,
         ]);
     if(maps.isNotEmpty){
-      return Siggmo(
-        maps.first[_columnMusicId],
-        maps.first[_columnMusicName],
-        maps.first[_columnMusicNameKana],
-        maps.first[_columnArtistName],
-        maps.first[_columnArtistNameKana],
-        maps.first[_columnAverage],
-        maps.first[_columnMax],
-        maps.first[_columnMin],
-        maps.first[_columnLatest],
-        maps.first[_columnLastTime],
-        maps.first[_columnTwoTimesBefore],
-        maps.first[_columnCreateDate],
-        maps.first[_columnUpdateDate],
-      );
+      return maps;
+      // return Siggmo(
+      //   maps.first[_columnMusicId],
+      //   maps.first[_columnMusicName],
+      //   maps.first[_columnMusicNameKana],
+      //   maps.first[_columnArtistName],
+      //   maps.first[_columnArtistNameKana],
+      //   maps.first[_columnAverage],
+      //   maps.first[_columnMax],
+      //   maps.first[_columnMin],
+      //   maps.first[_columnLatest],
+      //   maps.first[_columnLastTime],
+      //   maps.first[_columnTwoTimesBefore],
+      //   maps.first[_columnCreateDate],
+      //   maps.first[_columnUpdateDate],
+      // );
     }
     return null;
   }
@@ -238,7 +239,7 @@ class SiggmoDao {
   }
 
   //全件取得
-  Future<Siggmo?> mainAllFetch() async {
+  Future<List?> mainAllFetch() async {
     var helper = SiggmoDaoHelper(factory);
     try {
       await helper.open();

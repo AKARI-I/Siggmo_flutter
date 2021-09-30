@@ -32,7 +32,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // 曲一覧を取得
-  List<String> musicList = [];
+  List musicList = [];
 
   //画面読み込み時にDBから曲一覧を取得する
   _MainPageState(){
@@ -41,7 +41,12 @@ class _MainPageState extends State<MainPage> {
     late SiggmoDao helper = SiggmoDao(factory);
 
     // 曲一覧を取得
-    helper.mainAllFetch().then((value) => print("value = ${value!.musicId}"));
+    helper.mainAllFetch().then((musicList) => {
+      musicList!.forEach((value) => {
+        this.musicList.add(value.toString())
+      })
+    });
+    print("musicList(1) = $musicList");
   }
 
   @override
@@ -102,10 +107,13 @@ class _MainPageState extends State<MainPage> {
     late SiggmoDao helper = SiggmoDao(factory);
 
     // 曲一覧を取得
-    helper.mainAllFetch().then((value) =>
-        //print("value = ${value!.musicId}")
-      print(value!.musicId)
-    );
+    // helper.mainAllFetch().then((musicList) => setMusicList(musicList));
+    helper.mainAllFetch().then((musicList) => {
+      musicList!.forEach((value) {
+        this.musicList.add(value.toString());
+      })
+    });
+    print("musicList(2) = $musicList");
   }
 }
 
