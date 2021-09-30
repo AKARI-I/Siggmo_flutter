@@ -34,12 +34,28 @@ class _MainPageState extends State<MainPage> {
   // 曲一覧を取得
   List<String> musicList = [];
 
+  //画面読み込み時にDBから曲一覧を取得する
+  _MainPageState(){
+    //DBクラスを呼び出す
+    DatabaseFactory factory = DatabaseFactory();
+    late SiggmoDao helper = SiggmoDao(factory);
+
+    // 曲一覧を取得
+    helper.mainAllFetch().then((value) => print("value = ${value!.musicId}"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBarを表示し、タイトルも設定
       appBar: AppBar(
         title: Text('登録曲一覧'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.view_list),
+            onPressed: () => test(),
+          )
+        ]
       ),
       body: ListView.builder(
         itemCount: musicList.length,
@@ -77,6 +93,18 @@ class _MainPageState extends State<MainPage> {
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  void test(){
+    //DBクラスを呼び出す
+    DatabaseFactory factory = DatabaseFactory();
+    late SiggmoDao helper = SiggmoDao(factory);
+
+    // 曲一覧を取得
+    helper.mainAllFetch().then((value) =>
+        //print("value = ${value!.musicId}")
+      print(value!.musicId)
     );
   }
 }

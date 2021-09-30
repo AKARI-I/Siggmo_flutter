@@ -238,7 +238,7 @@ class SiggmoDao {
   }
 
   //全件取得
-  Future<Siggmo?> allFetch() async {
+  Future<Siggmo?> mainAllFetch() async {
     var helper = SiggmoDaoHelper(factory);
     try {
       await helper.open();

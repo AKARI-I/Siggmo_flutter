@@ -138,7 +138,7 @@ class _MusicAddPageState extends State<MusicAddPage> {
   }
   void query(){
     print("--- query ---");
-    print(helper.allFetch());
+    print(helper.mainAllFetch());
   }
   void update(){
     print("--- update処理 ---");
