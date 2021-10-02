@@ -1,26 +1,9 @@
+import 'dart:async';
+
+import 'package:path/path.dart';
+import 'package:siggmo/model/music_data.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/src/exception.dart';
-import 'package:path/path.dart';
-import 'dart:async';
-import 'dart:io';
-
-class Siggmo{
-  final int musicId;
-  final String musicName;
-  final String musicNameKana;
-  final String artistName;
-  final String artistNameKana;
-  final double average;
-  final double max;
-  final double min;
-  final double latest;
-  final double lastTime;
-  final double twoTimesBefore;
-  final String createDate;
-  final String updateDate;
-
-  const Siggmo(this.musicId, this.musicName, this.musicNameKana, this.artistName, this.artistNameKana, this.average, this.max, this.min, this.latest, this.lastTime, this.twoTimesBefore, this.createDate, this.updateDate);
-}
 
 //1.DDL操作の責務を持たせたクラス
 class DatabaseFactory {
@@ -31,8 +14,8 @@ class DatabaseFactory {
     final path = join(databasesPath, 'siggmo.db');
     //3.データベースが作成されていない場合にonCreate関数が呼ばれる
     return await openDatabase(path, version: 1, onCreate: (
-        Database db,
-        int version,
+      Database db,
+      int version,
     ) async {
       await db.execute('''
       create table ${SiggmoDaoHelper._tableName} (
@@ -56,7 +39,7 @@ class DatabaseFactory {
 }
 
 //4.データの取得・追加・更新・削除の責務を持たせたクラス
-class SiggmoDaoHelper{
+class SiggmoDaoHelper {
   static const _tableName = 'Siggmo';
   static const _columnMusicId = 'musicId';
   static const _columnMusicName = 'musicName';
@@ -83,27 +66,27 @@ class SiggmoDaoHelper{
   }
 
   //5.取得操作、必ずListで返却される
-  Future<Siggmo?> fetch(int musicId) async {
+  Future<MusicData?> fetch(int musicId) async {
     List<Map> maps = await _db.query(_tableName,
-    columns: [
-      _columnMusicId,
-      _columnMusicName,
-      _columnMusicNameKana,
-      _columnArtistName,
-      _columnArtistNameKana,
-      _columnAverage,
-      _columnMax,
-      _columnMin,
-      _columnLatest,
-      _columnLastTime,
-      _columnTwoTimesBefore,
-      _columnCreateDate,
-      _columnUpdateDate,
-    ],
-    where: '$_columnMusicId = ?',
-    whereArgs: [musicId]);
-    if(maps.isNotEmpty){
-      return Siggmo(
+        columns: [
+          _columnMusicId,
+          _columnMusicName,
+          _columnMusicNameKana,
+          _columnArtistName,
+          _columnArtistNameKana,
+          _columnAverage,
+          _columnMax,
+          _columnMin,
+          _columnLatest,
+          _columnLastTime,
+          _columnTwoTimesBefore,
+          _columnCreateDate,
+          _columnUpdateDate,
+        ],
+        where: '$_columnMusicId = ?',
+        whereArgs: [musicId]);
+    if (maps.isNotEmpty) {
+      return MusicData(
         maps.first[_columnMusicId],
         maps.first[_columnMusicName],
         maps.first[_columnMusicNameKana],
@@ -123,15 +106,37 @@ class SiggmoDaoHelper{
   }
 
   //6.挿入処理
-  Future<void> insert(String musicName, String musicNameKana, String artistName, String artistNameKana, double average, double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
+  Future<void> insert(
+      String musicName,
+      String musicNameKana,
+      String artistName,
+      String artistNameKana,
+      double average,
+      double max,
+      double min,
+      double latest,
+      double lastTime,
+      double twoTimesBefore,
+      String createDate,
+      String updateDate) async {
     print("=== insert method now ===");
-    print(musicName + "," + musicNameKana + "," + artistName + "," + artistNameKana + ",${average},${max},${min},${latest},${lastTime},${twoTimesBefore}," + createDate + "," + updateDate);
+    print(musicName +
+        "," +
+        musicNameKana +
+        "," +
+        artistName +
+        "," +
+        artistNameKana +
+        ",${average},${max},${min},${latest},${lastTime},${twoTimesBefore}," +
+        createDate +
+        "," +
+        updateDate);
     print("=========================");
     print("=== 全件取得 ===");
-    print (queryAllRows());
+    print(queryAllRows());
     print("===============");
 
-    await _db.insert(_tableName,{
+    await _db.insert(_tableName, {
       _columnMusicName: musicName,
       _columnMusicNameKana: musicNameKana,
       _columnArtistName: artistName,
@@ -149,34 +154,47 @@ class SiggmoDaoHelper{
 
   //7.削除処理
   Future<void> delete(int musicId) async {
-    await _db.delete(_tableName,
-    where: '$_columnMusicId = ?',
-    whereArgs: [musicId],
+    await _db.delete(
+      _tableName,
+      where: '$_columnMusicId = ?',
+      whereArgs: [musicId],
     );
   }
 
   //8.更新処理
-  Future<void> update(int musicId, String musicName, String musicNameKana, String artistName, String artistNameKana, double average, double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
+  Future<void> update(
+      int musicId,
+      String musicName,
+      String musicNameKana,
+      String artistName,
+      String artistNameKana,
+      double average,
+      double max,
+      double min,
+      double latest,
+      double lastTime,
+      double twoTimesBefore,
+      String createDate,
+      String updateDate) async {
     await _db.update(
-      _tableName,
-      {
-        _columnMusicId: musicId,
-        _columnMusicName: musicName,
-        _columnMusicNameKana: musicNameKana,
-        _columnArtistName: artistName,
-        _columnArtistNameKana: artistNameKana,
-        _columnAverage: average,
-        _columnMax: max,
-        _columnMin: min,
-        _columnLatest: latest,
-        _columnLastTime: lastTime,
-        _columnTwoTimesBefore: twoTimesBefore,
-        _columnCreateDate: createDate,
-        _columnUpdateDate: updateDate,
-      },
-      where: '$_columnMusicId = ?',
-      whereArgs: [musicId]
-    );
+        _tableName,
+        {
+          _columnMusicId: musicId,
+          _columnMusicName: musicName,
+          _columnMusicNameKana: musicNameKana,
+          _columnArtistName: artistName,
+          _columnArtistNameKana: artistNameKana,
+          _columnAverage: average,
+          _columnMax: max,
+          _columnMin: min,
+          _columnLatest: latest,
+          _columnLastTime: lastTime,
+          _columnTwoTimesBefore: twoTimesBefore,
+          _columnCreateDate: createDate,
+          _columnUpdateDate: updateDate,
+        },
+        where: '$_columnMusicId = ?',
+        whereArgs: [musicId]);
   }
 
   //全件取得
@@ -194,13 +212,37 @@ class SiggmoDao {
 
   const SiggmoDao(this.factory);
 
-  Future<void> save(String musicName, String musicNameKana, String artistName, String artistNameKana, double average, double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
+  Future<void> save(
+      String musicName,
+      String musicNameKana,
+      String artistName,
+      String artistNameKana,
+      double average,
+      double max,
+      double min,
+      double latest,
+      double lastTime,
+      double twoTimesBefore,
+      String createDate,
+      String updateDate) async {
     var helper = SiggmoDaoHelper(factory);
-    try{
+    try {
       //9.必ず最初にopenする
       await helper.open();
-      await helper.insert(musicName, musicNameKana, artistName, artistNameKana, average, max, min, latest, lastTime, twoTimesBefore, createDate, updateDate);
-    } on SqfliteDatabaseException catch (e){
+      await helper.insert(
+          musicName,
+          musicNameKana,
+          artistName,
+          artistNameKana,
+          average,
+          max,
+          min,
+          latest,
+          lastTime,
+          twoTimesBefore,
+          createDate,
+          updateDate);
+    } on SqfliteDatabaseException catch (e) {
       print(e.message);
     } finally {
       //10.必ず最後にcloseする
@@ -208,7 +250,19 @@ class SiggmoDao {
     }
   }
 
-  Future<Siggmo?> fetch(int musicId, String musicName, String artistName, String artistNameKana, double average, double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
+  Future<MusicData?> fetch(
+      int musicId,
+      String musicName,
+      String artistName,
+      String artistNameKana,
+      double average,
+      double max,
+      double min,
+      double latest,
+      double lastTime,
+      double twoTimesBefore,
+      String createDate,
+      String updateDate) async {
     var helper = SiggmoDaoHelper(factory);
     try {
       await helper.open();
@@ -223,7 +277,7 @@ class SiggmoDao {
 
   Future<void> delete(int musicId) async {
     var helper = SiggmoDaoHelper(factory);
-    try{
+    try {
       await helper.open();
       await helper.delete(musicId);
     } on SqfliteDatabaseException catch (e) {
