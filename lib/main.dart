@@ -36,17 +36,7 @@ class _MainPageState extends State<MainPage> {
 
   //画面読み込み時にDBから曲一覧を取得する
   _MainPageState(){
-    //DBクラスを呼び出す
-    DatabaseFactory factory = DatabaseFactory();
-    late SiggmoDao helper = SiggmoDao(factory);
-
-    // 曲一覧を取得
-    helper.mainAllFetch().then((musicList) => {
-      musicList!.forEach((value) => {
-        this.musicList.add(value.toString())
-      })
-    });
-    print("musicList(1) = $musicList");
+    fetchMusicList();
   }
 
   @override
@@ -58,7 +48,7 @@ class _MainPageState extends State<MainPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.view_list),
-            onPressed: () => test(),
+            onPressed: () => fetchMusicList(),
           )
         ]
       ),
@@ -101,7 +91,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void test(){
+  void fetchMusicList(){
     //DBクラスを呼び出す
     DatabaseFactory factory = DatabaseFactory();
     late SiggmoDao helper = SiggmoDao(factory);
@@ -113,7 +103,7 @@ class _MainPageState extends State<MainPage> {
         this.musicList.add(value.toString());
       })
     });
-    print("musicList(2) = $musicList");
+    print("musicList = $musicList");
   }
 }
 
