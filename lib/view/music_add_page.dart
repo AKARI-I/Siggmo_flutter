@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'db_provider.dart';
+import '../repository/db_provider.dart';
 import 'package:flutter/services.dart';
 
 // リスト追加画面用Widget
