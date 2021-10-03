@@ -47,6 +47,10 @@ class _MainPageState extends State<MainPage> {
         title: Text('登録曲一覧'),
         actions: <Widget>[
           IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => onSearch(),
+          ),
+          IconButton(
             icon: Icon(Icons.view_list),
             onPressed: () => fetchMusicList(),
           )
@@ -104,6 +108,45 @@ class _MainPageState extends State<MainPage> {
       })
     });
     print("musicList = $musicList");
+  }
+
+  void onSearch(){
+    // 検索用ポップアップ表示
+    print("検索用ポップアップ表示");
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text("検索"),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              children: const <Widget>[
+                Text("曲名"),
+                TextField(),
+                Text("アーティスト名"),
+                TextField(),
+                Text("平均点"),
+                TextField(),
+                Text("最高点"),
+                TextField(),
+                Text("最低点"),
+                TextField(),
+            ],
+          ),
+          actions: <Widget>[
+            //ボタン領域
+            FlatButton(
+              child: const Text("cancel"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: const Text("検索"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      }
+    );
   }
 }
 
