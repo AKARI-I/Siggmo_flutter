@@ -31,6 +31,15 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  // 入力されたテキストをデータとして持つ
+  String _musicName = '';
+  String _artistName = '';
+  double _averageMin = 0.0;
+  double _averageMax = 100.0;
+  double _maxMin = 0.0;
+  double _maxMax = 100.0;
+  double _minMin = 0.0;
+  double _minMax = 100.0;
   // 曲一覧を取得
   List musicList = [];
 
@@ -122,17 +131,46 @@ class _MainPageState extends State<MainPage> {
           SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
+              children: <Widget>[
                 Text("曲名"),
-                TextField(),
+                TextField(
+                  onChanged: (String value){
+                    setState((){ _musicName = value; print(_musicName); });
+                  },
+                ),
                 Text("アーティスト名"),
-                TextField(),
+                TextField(
+                  onChanged: (String value){
+                    setState((){ _artistName = value; print(_artistName); });
+                  },
+                ),
                 Text("平均点"),
-                TextField(),
+                Row(
+                  children: const <Widget>[
+                    Flexible(child: TextField()),
+                    Text("点～"),
+                    Flexible(child: TextField()),
+                    Text("点")
+                  ],
+                ),
                 Text("最高点"),
-                TextField(),
+                Row(
+                  children: const <Widget>[
+                    Flexible(child: TextField()),
+                    Text("点～"),
+                    Flexible(child: TextField()),
+                    Text("点")
+                  ],
+                ),
                 Text("最低点"),
-                TextField(),
+                Row(
+                  children: const <Widget>[
+                    Flexible(child: TextField()),
+                    Text("点～"),
+                    Flexible(child: TextField()),
+                    Text("点")
+                  ],
+                ),
               ],
             ),
           ),
