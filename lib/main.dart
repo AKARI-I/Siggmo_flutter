@@ -146,28 +146,53 @@ class _MainPageState extends State<MainPage> {
                 ),
                 Text("平均点"),
                 Row(
-                  children: const <Widget>[
-                    Flexible(child: TextField()),
+                  children: <Widget>[
+                    Flexible(child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        setState((){ _averageMin = double.parse(value); print(_averageMin); });
+                      },
+                    )),
                     Text("点～"),
-                    Flexible(child: TextField()),
+                    Flexible(child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        setState((){ _averageMax = double.parse(value); print(_averageMax); });
+                      },)),
                     Text("点")
                   ],
                 ),
                 Text("最高点"),
                 Row(
-                  children: const <Widget>[
-                    Flexible(child: TextField()),
+                  children: <Widget>[
+                    Flexible(child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        setState((){ _maxMin = double.parse(value); print(_maxMin); });
+                      },)),
                     Text("点～"),
-                    Flexible(child: TextField()),
+                    Flexible(child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        setState((){ _maxMax = double.parse(value); print(_maxMax); });
+                      },)),
                     Text("点")
                   ],
                 ),
                 Text("最低点"),
                 Row(
-                  children: const <Widget>[
-                    Flexible(child: TextField()),
+                  children: <Widget>[
+                    Flexible(child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        setState((){ _minMin = double.parse(value); print(_minMin); });
+                      },)),
                     Text("点～"),
-                    Flexible(child: TextField()),
+                    Flexible(child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        setState((){ _minMax = double.parse(value); print(_minMax); });
+                      },)),
                     Text("点")
                   ],
                 ),
