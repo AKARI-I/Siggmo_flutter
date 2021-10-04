@@ -121,42 +121,27 @@ class SiggmoDaoHelper{
     return null;
   }
 
-  //5.取得操作、必ずListで返却される
-  Future<Siggmo?> fetch(int musicId) async {
-    List<Map> maps = await _db.query(_tableName,
-    columns: [
-      _columnMusicId,
-      _columnMusicName,
-      _columnMusicNameKana,
-      _columnArtistName,
-      _columnArtistNameKana,
-      _columnAverage,
-      _columnMax,
-      _columnMin,
-      _columnLatest,
-      _columnLastTime,
-      _columnTwoTimesBefore,
-      _columnCreateDate,
-      _columnUpdateDate,
-    ],
-    where: '$_columnMusicId = ?',
-    whereArgs: [musicId]);
+  //5.取得操作、Listで返却される
+  Future<List?> fetch(Map musicArtist, Map averageMaxMin) async {
+    print("--- start fetch ---");
+    String sql = "select * from $_tableName where ";
+    String where = '';
+    if(musicArtist['musicName'] != '' && musicArtist['artistName'] != ''){
+      where += "musicName = '"+musicArtist['musicName']+"' and artistName = '"+musicArtist['artistName']+"'";
+    } else if(musicArtist['musicName'] != '' && musicArtist['artistName'] == ''){
+      where += "musicName = '"+musicArtist['musicName']+"'";
+    } else if(musicArtist['musicName'] == '' && musicArtist['artistName'] != ''){
+      where += "artistName = '"+musicArtist['artistName']+"'";
+    }
+    sql += where;
+    print(sql);
+
+    //検索結果取得
+    List<Map> maps = await _db.rawQuery(sql);
+    print("maps = $maps");
+
     if(maps.isNotEmpty){
-      return Siggmo(
-        maps.first[_columnMusicId],
-        maps.first[_columnMusicName],
-        maps.first[_columnMusicNameKana],
-        maps.first[_columnArtistName],
-        maps.first[_columnArtistNameKana],
-        maps.first[_columnAverage],
-        maps.first[_columnMax],
-        maps.first[_columnMin],
-        maps.first[_columnLatest],
-        maps.first[_columnLastTime],
-        maps.first[_columnTwoTimesBefore],
-        maps.first[_columnCreateDate],
-        maps.first[_columnUpdateDate],
-      );
+      return maps;
     }
     return null;
   }
@@ -252,11 +237,11 @@ class SiggmoDao {
     }
   }
 
-  Future<Siggmo?> fetch(int musicId, String musicName, String artistName, String artistNameKana, double average, double max, double min, double latest, double lastTime, double twoTimesBefore, String createDate, String updateDate) async {
+  Future<List?> fetch(Map musicArtist, Map averageMaxMin) async {
     var helper = SiggmoDaoHelper(factory);
     try {
       await helper.open();
-      return await helper.fetch(musicId);
+      return await helper.fetch(musicArtist, averageMaxMin);
     } on SqfliteDatabaseException catch (e) {
       print(e.message);
       return null;
