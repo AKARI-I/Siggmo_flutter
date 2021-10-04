@@ -118,8 +118,10 @@ class _MainPageState extends State<MainPage> {
       builder: (_) {
         return AlertDialog(
           title: const Text("検索"),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          content:
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: const <Widget>[
                 Text("曲名"),
                 TextField(),
@@ -131,7 +133,8 @@ class _MainPageState extends State<MainPage> {
                 TextField(),
                 Text("最低点"),
                 TextField(),
-            ],
+              ],
+            ),
           ),
           actions: <Widget>[
             //ボタン領域
