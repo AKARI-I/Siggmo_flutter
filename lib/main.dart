@@ -110,18 +110,31 @@ class _MainPageState extends State<MainPage> {
     late SiggmoDao helper = SiggmoDao(factory);
 
     // 曲一覧を取得
-    // helper.mainAllFetch().then((musicList) => setMusicList(musicList));
     helper.mainAllFetch().then((musicList) => {
       musicList!.forEach((value) {
         this.musicList.add(value.toString());
       })
     });
-    print("musicList = $musicList");
   }
 
+  //検索用ポップアップ
   void onSearch(){
     // 検索用ポップアップ表示
     print("検索用ポップアップ表示");
+    // 曲名、アーティスト名
+    Map<String, String> musicArtist = {
+      'musicName' : '',
+      'artistName' : ''
+    };
+    // 点数系
+    Map<String, double> averageMaxMin = {
+      'averageMin' : 0.0,
+      'averageMax' : 100.0,
+      'maxMin' : 0.0,
+      'maxMax' : 100.0,
+      'minMin' : 0.0,
+      'minMax' : 100.0
+    };
     showDialog(
       context: context,
       builder: (_) {
@@ -132,68 +145,68 @@ class _MainPageState extends State<MainPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("曲名"),
+                const Text("曲名"),
                 TextField(
                   onChanged: (String value){
-                    setState((){ _musicName = value; print(_musicName); });
+                    setState((){ _musicName = value; musicArtist['musicName'] = _musicName;});
                   },
                 ),
-                Text("アーティスト名"),
+                const Text("アーティスト名"),
                 TextField(
                   onChanged: (String value){
-                    setState((){ _artistName = value; print(_artistName); });
+                    setState((){ _artistName = value; musicArtist['artistName'] = _artistName;});
                   },
                 ),
-                Text("平均点"),
+                const Text("平均点"),
                 Row(
                   children: <Widget>[
                     Flexible(child: TextField(
                       keyboardType: TextInputType.number,
                       onChanged: (value){
-                        setState((){ _averageMin = double.parse(value); print(_averageMin); });
+                        setState((){ _averageMin = double.parse(value); averageMaxMin['averageMin'] = _averageMin;});
                       },
                     )),
-                    Text("点～"),
+                    const Text("点～"),
                     Flexible(child: TextField(
                       keyboardType: TextInputType.number,
                       onChanged: (value){
-                        setState((){ _averageMax = double.parse(value); print(_averageMax); });
+                        setState((){ _averageMax = double.parse(value); averageMaxMin['averageMax'] = _averageMax; });
                       },)),
-                    Text("点")
+                    const Text("点")
                   ],
                 ),
-                Text("最高点"),
+                const Text("最高点"),
                 Row(
                   children: <Widget>[
                     Flexible(child: TextField(
                       keyboardType: TextInputType.number,
                       onChanged: (value){
-                        setState((){ _maxMin = double.parse(value); print(_maxMin); });
+                        setState((){ _maxMin = double.parse(value); averageMaxMin['maxMin'] = _maxMin;});
                       },)),
-                    Text("点～"),
+                    const Text("点～"),
                     Flexible(child: TextField(
                       keyboardType: TextInputType.number,
                       onChanged: (value){
-                        setState((){ _maxMax = double.parse(value); print(_maxMax); });
+                        setState((){ _maxMax = double.parse(value); averageMaxMin['maxMax'] = _maxMax;});
                       },)),
-                    Text("点")
+                    const Text("点")
                   ],
                 ),
-                Text("最低点"),
+                const Text("最低点"),
                 Row(
                   children: <Widget>[
                     Flexible(child: TextField(
                       keyboardType: TextInputType.number,
                       onChanged: (value){
-                        setState((){ _minMin = double.parse(value); print(_minMin); });
+                        setState((){ _minMin = double.parse(value); averageMaxMin['minMin'] = _minMin;});
                       },)),
-                    Text("点～"),
+                    const Text("点～"),
                     Flexible(child: TextField(
                       keyboardType: TextInputType.number,
                       onChanged: (value){
-                        setState((){ _minMax = double.parse(value); print(_minMax); });
+                        setState((){ _minMax = double.parse(value); averageMaxMin['minMax'] = _minMax;});
                       },)),
-                    Text("点")
+                    const Text("点")
                   ],
                 ),
               ],
@@ -207,12 +220,30 @@ class _MainPageState extends State<MainPage> {
             ),
             FlatButton(
               child: const Text("検索"),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                search(musicArtist, averageMaxMin);
+                Navigator.pop(context);
+              },
             ),
           ],
         );
       }
     );
+  }
+
+  //検索処理
+  Future<List<Map>?> search(Map musicArtist, Map averageMaxMin) async {
+    //DBクラスを呼び出す
+    DatabaseFactory factory = DatabaseFactory();
+    late SiggmoDao helper = SiggmoDao(factory);
+
+    // 曲一覧を取得
+    helper.fetch(musicArtist, averageMaxMin).then((musicList) => {
+      musicList!.forEach((value) {
+        this.musicList.add(value.toString());
+      })
+    });
+    print(musicList);
   }
 }
 
