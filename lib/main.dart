@@ -85,10 +85,12 @@ class _MainPageState extends State<MainPage> {
             onDismissed: (direction){
               setState(() {
                 musicList.removeAt(index);
-                fetchMusicList();
               });
               // スワイプ後に実行される
-              onDelete(musicList[index]['musicId']);
+              /**
+               * TODO:musicId渡したい
+               */
+              onDelete(1);
             },
             child: Card(
               child: ListTile(
@@ -260,7 +262,7 @@ class _MainPageState extends State<MainPage> {
     DatabaseFactory factory = DatabaseFactory();
     late SiggmoDao helper = SiggmoDao(factory);
 
-    // 検索結果を取得
+    // 曲一覧を取得
     helper.fetch(musicArtist, averageMaxMin).then((musicList) => {
       musicList!.forEach((value) {
         this.musicList.add(value.toString());
@@ -272,6 +274,14 @@ class _MainPageState extends State<MainPage> {
   //削除処理
   Future<List<Map>?> onDelete(int musicId) async {
     print("--- 削除処理 ---");
+
+    //DBクラスを呼び出す
+    DatabaseFactory factory = DatabaseFactory();
+    late SiggmoDao helper = SiggmoDao(factory);
+
+    helper.delete(musicId);
+
+    print("musicList = $musicList");
   }
 }
 

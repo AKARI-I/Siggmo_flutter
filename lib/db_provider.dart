@@ -138,7 +138,7 @@ class SiggmoDaoHelper{
 
     //検索結果取得
     List<Map> maps = await _db.rawQuery(sql);
-    print("maps = $maps");
+    print(maps);
 
     if(maps.isNotEmpty){
       return maps;
