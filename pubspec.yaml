@@ -36,6 +36,7 @@ dependencies:
   sqflite: ^2.0.0+4
   path: ^1.6.4
   path_provider: ^1.6.0
+  hooks_riverpod: ^0.14.0+5
 
 dev_dependencies:
   flutter_test:
