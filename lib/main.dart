@@ -68,15 +68,38 @@ class _MainPageState extends State<MainPage> {
       body: ListView.builder(
         itemCount: musicList.length,
         itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(musicList[index]),
-              onTap:(){
-                print("onTap called");
-              },
-              onLongPress:() {
-                print("onLongTap called.");
-              },
+          return Dismissible(
+            key: Key(musicList[index]),
+            background: Container(
+              padding: const EdgeInsets.only(
+                right: 10,
+              ),
+              alignment: AlignmentDirectional.centerEnd,
+              color: Colors.red,
+              child: const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction){
+              setState(() {
+                musicList.removeAt(index);
+                fetchMusicList();
+              });
+              // スワイプ後に実行される
+              onDelete(musicList[index]['musicId']);
+            },
+            child: Card(
+              child: ListTile(
+                title: Text(musicList[index]),
+                onTap:(){
+                  print("onTap called");
+                },
+                onLongPress:() {
+                  print("onLongTap called.");
+                },
+              ),
             ),
           );
         },
@@ -244,6 +267,11 @@ class _MainPageState extends State<MainPage> {
       })
     });
     print("musicList = $musicList");
+  }
+
+  //削除処理
+  Future<List<Map>?> onDelete(int musicId) async {
+    print("--- 削除処理 ---");
   }
 }
 
